@@ -14,8 +14,8 @@ bool CurrentlyInMap;
 bool CurrentlyHoveringButton;
 
 void Main() {
-    @ButtonInactive = UI::LoadTexture("/assets/RefreshLB_inactive.png");
-    @ButtonActive = UI::LoadTexture("/assets/RefreshLB_active.png");
+    @ButtonInactive = UI::LoadTexture("assets/RefreshLB_inactive.png");
+    @ButtonActive = UI::LoadTexture("assets/RefreshLB_active.png");
     while(true) {
         if(!enabled) { return; }
         else if(execute) {
