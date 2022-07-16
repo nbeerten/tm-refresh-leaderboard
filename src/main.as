@@ -1,7 +1,6 @@
 [Setting category="General" name="Enabled"]
 bool enabled = true;
 
-
 vec2 ButtonSize;
 vec2 ButtonPosition;
 
@@ -72,9 +71,14 @@ UI::InputBlocking OnMouseButton(bool down, int button, int x, int y) {
 
 bool isLBvisible() {
     bool result = false;
+    bool result1 = false;
+    bool result2 = false;
 
     auto app = cast<CTrackMania>(GetApp());
-    auto network = app.Network;
+    auto network = cast<CGameCtnNetwork>(GetApp().Network);
+    auto ServerInfo = cast<CTrackManiaNetworkServerInfo>(network.ServerInfo);
+
+    string sCurGameModeStr = ServerInfo.CurGameModeStr;
 
     if (network.ClientManiaAppPlayground !is null && network.ClientManiaAppPlayground.Playground !is null && network.ClientManiaAppPlayground.UILayers.Length > 0) {
         auto uilayers = network.ClientManiaAppPlayground.UILayers;
@@ -89,14 +93,23 @@ bool isLBvisible() {
                     CGameManialinkQuad@ mButton = cast<CGameManialinkQuad@>(curLayer.LocalPage.GetFirstChild("quad-toggle-records-icon"));
 
                     if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_ArrowLeft.dds") {
-                        result = true;
+                        result1 = true;
                     } else if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_WorldRecords.dds") {
-                        result = false;
+                        result1 = false;
                     }
 
                 }
             }
         }
     }
-    return result;
+
+    if(sCurGameModeStr != "") {
+        if(sCurGameModeStr == "TM_TimeAttack_Online" || sCurGameModeStr == "TM_Campaign_Local" || sCurGameModeStr == "TM_PlayMap_Local") {
+            result2 = true;
+        }
+        else result2 = false;
+    } else result2 = false;
+
+    if(result1 && result2) return true;
+    else return false;
 }
