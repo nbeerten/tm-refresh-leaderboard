@@ -17,8 +17,7 @@ void Main() {
     @ButtonInactive = UI::LoadTexture("assets/RefreshLB_inactive.png");
     @ButtonActive = UI::LoadTexture("assets/RefreshLB_active.png");
     while(true) {
-        if(!enabled) continue;
-        else if(execute) {
+        if(enabled && execute) {
             auto app = cast<CTrackMania>(GetApp());
             if(app !is null && app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords != false) {
                 app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords = false;
