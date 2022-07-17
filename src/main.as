@@ -18,10 +18,10 @@ void Main() {
     while(true) {
         if(enabled && execute) {
             auto app = cast<CTrackMania>(GetApp());
-            if(app !is null && app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords != false) {
-                app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords = false;
+            if(app !is null) {
+                app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords = !app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords;
                 sleep(1);
-                app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords = true;
+                app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords = !app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords;
                 execute = false;
                 trace(Icons::Refresh + " Refreshed Leaderboard");
             }
@@ -40,7 +40,7 @@ void Update(float dt) {
 
 void Render() {
 	auto app = cast<CTrackMania>(GetApp());
-    if(enabled && isLBvisible() && app !is null && app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords != false && CurrentlyInMap != false && app.RootMap !is null && app.CurrentPlayground !is null && app.Editor is null) {
+    if(enabled && isLBvisible() && app !is null && CurrentlyInMap != false && app.RootMap !is null && app.CurrentPlayground !is null && app.Editor is null) {
         if(!UI::IsGameUIVisible()) return;
         auto windowFlags = UI::WindowFlags::NoCollapse | UI::WindowFlags::NoDocking | UI::WindowFlags::NoResize | UI::WindowFlags::NoTitleBar;
 
@@ -91,12 +91,13 @@ bool isLBvisible() {
                 auto manialinkname = curLayer.ManialinkPageUtf8.SubStr(start, end);
                 if (manialinkname.Contains("UIModule_Race_Record")) {
                     CGameManialinkQuad@ mButton = cast<CGameManialinkQuad@>(curLayer.LocalPage.GetFirstChild("quad-toggle-records-icon"));
-
-                    if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_ArrowLeft.dds") {
-                        result1 = true;
-                    } else if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_WorldRecords.dds") {
-                        result1 = false;
-                    }
+                    if(mButton !is null) {
+                        if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_ArrowLeft.dds") {
+                            result1 = true;
+                        } else if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_WorldRecords.dds") {
+                            result1 = false;
+                        }
+                    } else result1 = false;
 
                 }
             }
