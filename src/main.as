@@ -80,6 +80,7 @@ bool isLBvisible() {
 
     string sCurGameModeStr = ServerInfo.CurGameModeStr;
 
+    // Thanks chips for the code in the if-statement below!
     if (network.ClientManiaAppPlayground !is null && network.ClientManiaAppPlayground.Playground !is null && network.ClientManiaAppPlayground.UILayers.Length > 0) {
         auto uilayers = network.ClientManiaAppPlayground.UILayers;
 
