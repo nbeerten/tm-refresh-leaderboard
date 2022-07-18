@@ -108,21 +108,49 @@ bool isLBvisible() {
             }
         }
     }
-
+    // pb > gold
     if(sCurGameModeStr != "") {
         if(sCurGameModeStr == "TM_TimeAttack_Online" || sCurGameModeStr == "TM_Campaign_Local" || sCurGameModeStr == "TM_PlayMap_Local") {
-            GamemodeVisibility = true;
-        }
-        else GamemodeVisibility = false;
+            if(network.ClientManiaAppPlayground !is null) {
+
+                auto userMgr = network.ClientManiaAppPlayground.UserMgr;
+                MwId userId;
+                if (userMgr.Users.Length > 0) {
+                    userId = userMgr.Users[0].Id;
+                } else {
+                    userId.Value = uint(-1);
+                }
+                auto scoreMgr = network.ClientManiaAppPlayground.ScoreMgr;
+                auto RootMap = app.RootMap;
+                string MapUid;
+                if(RootMap !is null){ MapUid = RootMap.MapInfo.MapUid; }
+                else { MapUid = ""; }
+                
+                int pb = -1;
+                int gold = -1;
+                if(MapUid != ""){
+                   pb = scoreMgr.Map_GetRecord_v2(userId, MapUid, "PersonalBest", "", "TimeAttack", "");
+                   gold = RootMap.TMObjective_GoldTime;
+                } else {  pb = -1; gold = -1; };
+
+                bool AlwaysDisplayRecords = app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords;
+
+
+                if(AlwaysDisplayRecords){
+                    GamemodeVisibility = true;
+                } else if(pb < 0 && !AlwaysDisplayRecords) {
+                    GamemodeVisibility = false;
+                } else if(pb > gold && !AlwaysDisplayRecords) {
+                    GamemodeVisibility = false;
+                } else if(pb < gold && !AlwaysDisplayRecords) {
+                    GamemodeVisibility = true;
+                } else {
+                    GamemodeVisibility = false;
+                }
+            }
+        } else GamemodeVisibility = false;
     } else GamemodeVisibility = false;
 
-    bool AlwaysDisplayRecords = app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords;
-    if(sCurGameModeStr != "") {
-        if(!AlwaysDisplayRecords && sCurGameModeStr == "TM_Campaign_Local") {
-            AlwaysDisplayRecordsSetting = true;
-        } else AlwaysDisplayRecordsSetting = AlwaysDisplayRecords;
-    } else AlwaysDisplayRecordsSetting = AlwaysDisplayRecords;
-
-    if(ManialinkVisibility && GamemodeVisibility && AlwaysDisplayRecordsSetting) return true;
+    if(ManialinkVisibility && GamemodeVisibility) return true;
     else return false;
 }

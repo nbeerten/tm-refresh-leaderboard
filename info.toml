@@ -2,7 +2,7 @@
 name        = "Refresh Leaderboard"
 author      = "nbeerten"
 category    = "Utilities"
-version     = "1"
+version     = "1.0.1"
 
 [script]
 imports     = ['Permissions.as']
