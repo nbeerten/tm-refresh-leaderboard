@@ -40,20 +40,20 @@ void Update(float dt) {
 
 void Render() {
     if(!Permissions::ViewRecords() || !enabled) return;
+    if(!UI::IsGameUIVisible()) return;
 	auto app = cast<CTrackMania>(GetApp());
-    if(isLBvisible() && app !is null && CurrentlyInMap != false && app.RootMap !is null && app.CurrentPlayground !is null && app.Editor is null) {
-        if(!UI::IsGameUIVisible()) return;
-        auto windowFlags = UI::WindowFlags::NoCollapse | UI::WindowFlags::NoDocking | UI::WindowFlags::NoResize | UI::WindowFlags::NoTitleBar;
+    if(app !is null && app.RootMap !is null && app.CurrentPlayground !is null && app.Editor is null) {
+        if(isLBvisible()) {
+            float height = Draw::GetHeight();
+            ButtonSize = vec2(height / 22.5, height / 22.5);
+            ButtonPosition = vec2(height / 20, 0.333 * height);
 
-        float height = Draw::GetHeight();
-        ButtonSize = vec2(height / 22.5, height / 22.5);
-        ButtonPosition = vec2(height / 20, 0.333 * height);
-
-        UI::DrawList@ DrawList = UI::GetBackgroundDrawList();
-        if(CurrentlyHoveringButton) {
-            DrawList.AddImage(ButtonActive, ButtonPosition, ButtonSize);
-        } else {
-            DrawList.AddImage(ButtonInactive, ButtonPosition, ButtonSize);
+            UI::DrawList@ DrawList = UI::GetBackgroundDrawList();
+            if(CurrentlyHoveringButton) {
+                DrawList.AddImage(ButtonActive, ButtonPosition, ButtonSize);
+            } else {
+                DrawList.AddImage(ButtonInactive, ButtonPosition, ButtonSize);
+            }
         }
     }
 }
@@ -75,8 +75,10 @@ UI::InputBlocking OnMouseButton(bool down, int button, int x, int y) {
 bool isLBvisible() {
     bool ManialinkVisibility = false;
     bool GamemodeVisibility = false;
+    bool AlwaysDisplayRecordsSetting = false;
 
     auto app = cast<CTrackMania>(GetApp());
+    if(app is null) return false;
     auto network = cast<CGameCtnNetwork>(GetApp().Network);
     auto ServerInfo = cast<CTrackManiaNetworkServerInfo>(network.ServerInfo);
 
@@ -114,6 +116,13 @@ bool isLBvisible() {
         else GamemodeVisibility = false;
     } else GamemodeVisibility = false;
 
-    if(ManialinkVisibility && GamemodeVisibility) return true;
+    bool AlwaysDisplayRecords = app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords;
+    if(sCurGameModeStr != "") {
+        if(!AlwaysDisplayRecords && sCurGameModeStr == "TM_Campaign_Local") {
+            AlwaysDisplayRecordsSetting = true;
+        } else AlwaysDisplayRecordsSetting = AlwaysDisplayRecords;
+    } else AlwaysDisplayRecordsSetting = AlwaysDisplayRecords;
+
+    if(ManialinkVisibility && GamemodeVisibility && AlwaysDisplayRecordsSetting) return true;
     else return false;
 }
