@@ -16,7 +16,7 @@ void Main() {
     @ButtonInactive = UI::LoadTexture("assets/RefreshLB_inactive.png");
     @ButtonActive = UI::LoadTexture("assets/RefreshLB_active.png");
     while(true) {
-        if(enabled && execute) {
+        if(Permissions::ViewRecords() && enabled && execute) {
             auto app = cast<CTrackMania>(GetApp());
             if(app !is null) {
                 app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords = !app.UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords;
@@ -39,8 +39,9 @@ void Update(float dt) {
 }
 
 void Render() {
+    if(!Permissions::ViewRecords() || !enabled) return;
 	auto app = cast<CTrackMania>(GetApp());
-    if(enabled && isLBvisible() && app !is null && CurrentlyInMap != false && app.RootMap !is null && app.CurrentPlayground !is null && app.Editor is null) {
+    if(isLBvisible() && app !is null && CurrentlyInMap != false && app.RootMap !is null && app.CurrentPlayground !is null && app.Editor is null) {
         if(!UI::IsGameUIVisible()) return;
         auto windowFlags = UI::WindowFlags::NoCollapse | UI::WindowFlags::NoDocking | UI::WindowFlags::NoResize | UI::WindowFlags::NoTitleBar;
 
@@ -58,10 +59,12 @@ void Render() {
 }
 
 void OnMouseMove(int x, int y) {
+    if(!Permissions::ViewRecords() || !enabled) return;
 	CurrentlyHoveringButton = (x > ButtonPosition.x && x < ButtonPosition.x + ButtonSize.x && y > ButtonPosition.y && y < ButtonPosition.y + ButtonSize.y);
 }
 
 UI::InputBlocking OnMouseButton(bool down, int button, int x, int y) {
+    if(!Permissions::ViewRecords() || !enabled) return UI::InputBlocking::DoNothing;
 	if (isLBvisible() && down && button == 0 && (x > ButtonPosition.x && x < ButtonPosition.x + ButtonSize.x && y > ButtonPosition.y && y < ButtonPosition.y + ButtonSize.y)) {
 		execute = true;
 		return UI::InputBlocking::Block;
@@ -70,9 +73,8 @@ UI::InputBlocking OnMouseButton(bool down, int button, int x, int y) {
 }
 
 bool isLBvisible() {
-    bool result = false;
-    bool result1 = false;
-    bool result2 = false;
+    bool ManialinkVisibility = false;
+    bool GamemodeVisibility = false;
 
     auto app = cast<CTrackMania>(GetApp());
     auto network = cast<CGameCtnNetwork>(GetApp().Network);
@@ -94,11 +96,11 @@ bool isLBvisible() {
                     CGameManialinkQuad@ mButton = cast<CGameManialinkQuad@>(curLayer.LocalPage.GetFirstChild("quad-toggle-records-icon"));
                     if(mButton !is null) {
                         if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_ArrowLeft.dds") {
-                            result1 = true;
+                            ManialinkVisibility = true;
                         } else if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_WorldRecords.dds") {
-                            result1 = false;
+                            ManialinkVisibility = false;
                         }
-                    } else result1 = false;
+                    } else ManialinkVisibility = false;
 
                 }
             }
@@ -107,11 +109,11 @@ bool isLBvisible() {
 
     if(sCurGameModeStr != "") {
         if(sCurGameModeStr == "TM_TimeAttack_Online" || sCurGameModeStr == "TM_Campaign_Local" || sCurGameModeStr == "TM_PlayMap_Local") {
-            result2 = true;
+            GamemodeVisibility = true;
         }
-        else result2 = false;
-    } else result2 = false;
+        else GamemodeVisibility = false;
+    } else GamemodeVisibility = false;
 
-    if(result1 && result2) return true;
+    if(ManialinkVisibility && GamemodeVisibility) return true;
     else return false;
 }
