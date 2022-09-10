@@ -14,7 +14,7 @@ bool ExecuteRefreshNow = false;
 bool CurrentlyInMap;
 bool CurrentlyHoveringButton;
 
-bool PermissionViewRecords;
+bool PermissionViewRecords = false;
 // States for isVisible() function
 bool ManialinkVisibility = false; // Visible as per Manialink contents
 bool ManialinkIsVisible = true; // Visible as per IsVisible boolean of Manialink CGameUILayer
