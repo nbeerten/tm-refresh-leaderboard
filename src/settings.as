@@ -15,7 +15,10 @@ float ButtonPosX = (ScreenHeight / 35.556) / ScreenHeight;
 [Setting hidden category="General" name="Button Position Y"]
 float ButtonPosY = (ScreenHeight * 0.333) / ScreenWidth;
 
-[SettingsTab name="Button"]
+[Setting hidden category="Button" name="Show button if leaderboard is collapsed"]
+bool ShowButtonWithCollapsedLeaderboard = false;
+
+[SettingsTab name="Button" icon="Square"]
 void RenderSettingsButton()
 {
     if(UI::Button('Reset to default')) {
@@ -26,6 +29,7 @@ void RenderSettingsButton()
             ButtonPosX = 0.028;
             ButtonPosY = 0.333;
         }
+        ShowButtonWithCollapsedLeaderboard = false;
     }
 	UI::TextWrapped("Disable Automatic placement of button to customize button size and position.");
 
@@ -39,21 +43,25 @@ void RenderSettingsButton()
 	    UI::TextWrapped("Button size in pixels. Won't scale with resolution.");
 
         UI::Columns(2, "ButtonSize", false);
-            ButtonSizeX = UI::SliderFloat("X (Pixels)", ButtonSizeX, 0, ScreenWidth);
+            ButtonSizeX = UI::SliderFloat("X##size", ButtonSizeX, 0, ScreenWidth);
             UI::NextColumn();
-            ButtonSizeY = UI::SliderFloat("Y (Pixels)", ButtonSizeY, 0, ScreenHeight);
+            ButtonSizeY = UI::SliderFloat("Y##size", ButtonSizeY, 0, ScreenHeight);
         UI::Columns(1);
         UI::Dummy(vec2(0,10));
         UI::TextWrapped("Button position. Value between 0 and 1. Will scale with resolution.");
         UI::Columns(2, "ButtonPos", false);
-            ButtonPosX = UI::SliderFloat("X", ButtonPosX, 0, 1);
+            ButtonPosX = UI::SliderFloat("X##pos", ButtonPosX, 0, 1);
             UI::NextColumn();
-            ButtonPosY = UI::SliderFloat("Y", ButtonPosY, 0, 1);
+            ButtonPosY = UI::SliderFloat("Y##pos", ButtonPosY, 0, 1);
         UI::Columns(1);
     }
+
+    UI::Separator();
+    UI::Markdown("Show the button if the leaderboard is collapsed, or when the leaderboard is hidden by other plugins (e.g. HUD Picker). **Might improve performance slightly if turned on.** By default turned off.");
+    ShowButtonWithCollapsedLeaderboard = UI::Checkbox("Show button if leaderboard is collapsed", ShowButtonWithCollapsedLeaderboard);
 }
 
-[SettingsTab name="Debug"]
+[SettingsTab name="Debug" icon="Bug"]
 void RenderSettingsDebug()
 {
     UI::Markdown("## Debug information");
@@ -62,6 +70,8 @@ void RenderSettingsDebug()
     UI::Text("AlwaysDisplayRecords" + (AlwaysDisplayRecords ? Icons::Check : Icons::Times));
     UI::Separator();
     UI::Markdown("### Items below should all be checked for button to be visible");
+    UI::Text("UI::IsGameUIVisible()" + (UI::IsGameUIVisible() ? Icons::Check : Icons::Times));
+    UI::Text("isLeaderboardVisible" + (isLeaderboardVisible ? Icons::Check : Icons::Times));
     UI::Text("ManialinkVisibility" + (ManialinkVisibility ? Icons::Check : Icons::Times));
     UI::Text("ManialinkIsVisible" + (ManialinkIsVisible ? Icons::Check : Icons::Times));
     UI::Text("GamemodeVisibility" + (GamemodeVisibility ? Icons::Check : Icons::Times));
