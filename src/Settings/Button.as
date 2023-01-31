@@ -1,32 +1,29 @@
-[Setting category="General" name="Enabled"]
-bool Enabled = true;
-[Setting category="General" name="Log more information"]
-bool MoreLogging = false;
-
 [Setting hidden category="Button" name="Automatic placement of button"]
 bool AutoPlaceButton = true;
 
-[Setting hidden category="General" name="Button Size X"]
+[Setting hidden category="Button" name="Button Size X"]
 float ButtonSizeX = ScreenHeight / 22.5;
-[Setting hidden category="General" name="Button Size Y"]
+[Setting hidden category="Button" name="Button Size Y"]
 float ButtonSizeY = ScreenHeight / 22.5;
-[Setting hidden category="General" name="Button Position X"]
+[Setting hidden category="Button" name="Button Position X"]
 float ButtonPosX = (ScreenHeight / 35.556) / ScreenHeight;
-[Setting hidden category="General" name="Button Position Y"]
+[Setting hidden category="Button" name="Button Position Y"]
 float ButtonPosY = (ScreenHeight * 0.333) / ScreenWidth;
 
 [Setting hidden category="Button" name="Show button if leaderboard is collapsed"]
 bool ShowButtonWithCollapsedLeaderboard = false;
 
-[SettingsTab name="Button" icon="Square"]
+[SettingsTab name="Button" icon="Square" order="1"]
 void RenderSettingsButton()
 {
     if(UI::Button('Reset to default')) {
         if(!AutoPlaceButton) {
-            ScreenHeight = Draw::GetHeight();
             ButtonSizeX = ScreenHeight / 22.5;
             ButtonSizeY = ScreenHeight / 22.5;
-            ButtonPosX = 0.028;
+            // Calculate the equivalent position for all resolutions; X = 0.028 on 16/9 display. >16/9 -> offset, <16/9 -> squish
+            float IdealWidth = Math::Min(ScreenWidth, ScreenHeight * 16.0 / 9.0);
+            float AspectDiff = Math::Max(0.0, ScreenWidth / ScreenHeight - 16.0 / 9.0) / 2.0;
+            ButtonPosX = (0.028125 * IdealWidth + ScreenHeight * AspectDiff) / ScreenWidth;
             ButtonPosY = 0.333;
         }
         ShowButtonWithCollapsedLeaderboard = false;
@@ -59,26 +56,4 @@ void RenderSettingsButton()
     UI::Separator();
     UI::Markdown("Show the button if the leaderboard is collapsed, or when the leaderboard is hidden by other plugins (e.g. HUD Picker). **Might improve performance slightly if turned on.** By default turned off.");
     ShowButtonWithCollapsedLeaderboard = UI::Checkbox("Show button if leaderboard is collapsed", ShowButtonWithCollapsedLeaderboard);
-}
-
-[SettingsTab name="Debug" icon="Bug"]
-void RenderSettingsDebug()
-{
-    UI::Markdown("## Debug information");
-    UI::Text("CurrentlyInMap" + (CurrentlyInMap ? Icons::Check : Icons::Times));
-    bool AlwaysDisplayRecords = GetApp().UserManagerScript.Users[0].Config.Interface_AlwaysDisplayRecords;
-    UI::Text("AlwaysDisplayRecords" + (AlwaysDisplayRecords ? Icons::Check : Icons::Times));
-    UI::Separator();
-    UI::Markdown("### Items below should all be checked for button to be visible");
-    UI::Text("UI::IsGameUIVisible()" + (UI::IsGameUIVisible() ? Icons::Check : Icons::Times));
-    UI::Text("isLeaderboardVisible" + (isLeaderboardVisible ? Icons::Check : Icons::Times));
-    UI::Text("ManialinkVisibility" + (ManialinkVisibility ? Icons::Check : Icons::Times));
-    UI::Text("ManialinkIsVisible" + (ManialinkIsVisible ? Icons::Check : Icons::Times));
-    UI::Text("GamemodeVisibility" + (GamemodeVisibility ? Icons::Check : Icons::Times));
-    UI::Separator();
-    UI::Markdown("### Button Information");
-    UI::Text("CurrentlyHoveringButton" + (CurrentlyHoveringButton ? Icons::Check : Icons::Times));
-    UI::Text("Size: " + tostring(ButtonSize));
-    UI::Text("Position: " + tostring(ButtonPosition));
-    UI::Text("Absolute Position: " + tostring(AbsoluteButtonPosition));
 }
