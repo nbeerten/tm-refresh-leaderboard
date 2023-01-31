@@ -71,7 +71,10 @@ void Update(float dt) {
     if(AutoPlaceButton) {
         ButtonSizeX = ScreenHeight / 22.5;
         ButtonSizeY = ScreenHeight / 22.5;
-        ButtonPosX = 0.028;
+    	// Calculate the equivalent position for all resolutions; X = 0.028 on 16/9 display. >16/9 -> offset, <16/9 -> squish
+        float IdealWidth = Math::Min(ScreenWidth, ScreenHeight * 16.0 / 9.0);
+        float AspectDiff = Math::Max(0.0, ScreenWidth / ScreenHeight - 16.0 / 9.0) / 2.0;
+        ButtonPosX = (0.028 * IdealWidth + ScreenHeight * AspectDiff) / ScreenWidth;
         ButtonPosY = 0.333;
     }
 
