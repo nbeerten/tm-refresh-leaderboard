@@ -2,18 +2,18 @@
 bool AutoPlaceButton = true;
 
 [Setting hidden category="Button" name="Button Size X"]
-float ButtonSizeX = ScreenHeight / 22.5;
+float ButtonSizeX = Draw::GetHeight() / 22.5;
 [Setting hidden category="Button" name="Button Size Y"]
-float ButtonSizeY = ScreenHeight / 22.5;
+float ButtonSizeY = Draw::GetHeight() / 22.5;
 [Setting hidden category="Button" name="Button Position X"]
-float ButtonPosX = (ScreenHeight / 35.556) / ScreenHeight;
+float ButtonPosX = (Draw::GetHeight() / 35.556) / Draw::GetHeight();
 [Setting hidden category="Button" name="Button Position Y"]
-float ButtonPosY = (ScreenHeight * 0.333) / ScreenWidth;
+float ButtonPosY = (Draw::GetHeight() * 0.333) / Draw::GetWidth();
 
 [Setting hidden category="Button" name="Show button if leaderboard is collapsed"]
 bool ShowButtonWithCollapsedLeaderboard = false;
 
-[SettingsTab name="Button" icon="Square" order="1"]
+[SettingsTab name="Button" icon="Square" order="0"]
 void RenderSettingsButton()
 {
     if(UI::Button('Reset to default')) {

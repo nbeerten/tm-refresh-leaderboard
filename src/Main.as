@@ -22,6 +22,17 @@ void Main() {
     @ButtonNormal = UI::LoadTexture("assets/RefreshLB_normal.png");
     @ButtonHover = UI::LoadTexture("assets/RefreshLB_hover.png");
 
+    if(ButtonSizeX < 0 || ButtonSizeY < 0) {
+        ButtonSizeX = ScreenHeight / 22.5;
+        ButtonSizeY = ScreenHeight / 22.5;
+
+        UI::ShowNotification(
+			"\\$ff7" + Icons::ExclamationTriangle + "\\$z Refresh Leaderboard",
+			"The button size was negative, the button size has been reset.",
+			vec4(0.7f, 0, 0, 1)
+		);
+    };
+
     startnew(Leaderboard::Coroutine);
     startnew(Refresh::Coroutine);
 }
@@ -57,6 +68,11 @@ void Update(float dt) {
         ButtonPosX = (0.028125 * IdealWidth + ScreenHeight * AspectDiff) / ScreenWidth;
         ButtonPosY = 0.333;
     }
+
+    if(ButtonSizeX < 0 || ButtonSizeY < 0) {
+        ButtonSizeX = ScreenHeight / 22.5;
+        ButtonSizeY = ScreenHeight / 22.5;
+    };
 
     ButtonSize = vec2(ButtonSizeX, ButtonSizeY);
     ButtonPosition = vec2(ButtonPosX, ButtonPosY);

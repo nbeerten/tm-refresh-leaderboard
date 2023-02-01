@@ -1,7 +1,7 @@
 [Setting category="Debug" name="Log more information" hidden]
 bool MoreLogging = false;
 
-[SettingsTab name="Debug" icon="Bug" order="3"]
+[SettingsTab name="Debug" icon="Bug" order="1"]
 void RenderSettingsDebug()
 {
     UI::Markdown("## Debug Settings");
@@ -17,7 +17,7 @@ void RenderSettingsDebug()
     UI::Separator();
     UI::Markdown("### Button Information");
     UI::Text("CurrentlyHoveringButton" + (CurrentlyHoveringButton ? Icons::Check : Icons::Times));
-    UI::Text("Size: " + tostring(ButtonSize));
+    UI::Text("Size: " + tostring(ButtonSize) + " (X: " + ButtonSizeX + ", Y: " + ButtonSizeY + ")");
     UI::Text("Position: " + tostring(ButtonPosition));
     UI::Text("Absolute Position: " + tostring(AbsoluteButtonPosition));
 }
