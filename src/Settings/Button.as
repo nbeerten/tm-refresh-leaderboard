@@ -2,13 +2,13 @@
 bool AutoPlaceButton = true;
 
 [Setting hidden category="Button" name="Button Size X"]
-float ButtonSizeX = Draw::GetHeight() / 22.5;
+float ButtonSizeX = 48;
 [Setting hidden category="Button" name="Button Size Y"]
-float ButtonSizeY = Draw::GetHeight() / 22.5;
+float ButtonSizeY = 48;
 [Setting hidden category="Button" name="Button Position X"]
-float ButtonPosX = (Draw::GetHeight() / 35.556) / Draw::GetHeight();
+float ButtonPosX = 0.028125;
 [Setting hidden category="Button" name="Button Position Y"]
-float ButtonPosY = (Draw::GetHeight() * 0.333) / Draw::GetWidth();
+float ButtonPosY = 0.333;
 
 [Setting hidden category="Button" name="Show button if leaderboard is collapsed"]
 bool ShowButtonWithCollapsedLeaderboard = false;
@@ -18,12 +18,9 @@ void RenderSettingsButton()
 {
     if(UI::Button('Reset to default')) {
         if(!AutoPlaceButton) {
-            ButtonSizeX = ScreenHeight / 22.5;
-            ButtonSizeY = ScreenHeight / 22.5;
-            // Calculate the equivalent position for all resolutions; X = 0.028 on 16/9 display. >16/9 -> offset, <16/9 -> squish
-            float IdealWidth = Math::Min(ScreenWidth, ScreenHeight * 16.0 / 9.0);
-            float AspectDiff = Math::Max(0.0, ScreenWidth / ScreenHeight - 16.0 / 9.0) / 2.0;
-            ButtonPosX = (0.028125 * IdealWidth + ScreenHeight * AspectDiff) / ScreenWidth;
+            ButtonSizeX = 48;
+            ButtonSizeY = 48;
+            ButtonPosX = 0.028125;
             ButtonPosY = 0.333;
         }
         ShowButtonWithCollapsedLeaderboard = false;

@@ -8,11 +8,9 @@ vec2 ButtonPosition;
 vec2 AbsoluteButtonPosition;
 
 // States
-bool CurrentlyInMap;
-bool CurrentlyHoveringButton;
-
+bool CurrentlyInMap = false;
+bool CurrentlyHoveringButton = false;
 bool PermissionViewRecords = false;
-
 
 // Textures
 UI::Texture@ ButtonNormal;
@@ -22,17 +20,6 @@ void Main() {
     @ButtonNormal = UI::LoadTexture("assets/RefreshLB_normal.png");
     @ButtonHover = UI::LoadTexture("assets/RefreshLB_hover.png");
 
-    if(ButtonSizeX < 0 || ButtonSizeY < 0) {
-        ButtonSizeX = ScreenHeight / 22.5;
-        ButtonSizeY = ScreenHeight / 22.5;
-
-        UI::ShowNotification(
-			"\\$ff7" + Icons::ExclamationTriangle + "\\$z Refresh Leaderboard",
-			"The button size was negative, the button size has been reset.",
-			vec4(0.7f, 0, 0, 1)
-		);
-    };
-
     startnew(Leaderboard::Coroutine);
     startnew(Refresh::Coroutine);
 }
@@ -40,25 +27,26 @@ void Main() {
 void Render() {
     if(!PermissionViewRecords || !UI::IsGameUIVisible()) return;
 	auto app = cast<CTrackMania>(GetApp());
-    if(app !is null && app.RootMap !is null && app.CurrentPlayground !is null && app.Editor is null) {
-        if(Leaderboard::isVisible) {
-            UI::DrawList@ DrawList = UI::GetBackgroundDrawList();
-            if(CurrentlyHoveringButton) {
-                DrawList.AddImage(ButtonHover, AbsoluteButtonPosition, ButtonSize);
-            } else {
-                DrawList.AddImage(ButtonNormal, AbsoluteButtonPosition, ButtonSize);
-            }
-        }
+    if(app is null) return;
+    if(app.RootMap is null) return;
+    if(app.CurrentPlayground is null) return;
+    if(app.Editor !is null) return;
+
+    if(!Leaderboard::isVisible) return;
+
+    UI::DrawList@ DrawList = UI::GetBackgroundDrawList();
+    if(CurrentlyHoveringButton) {
+        DrawList.AddImage(ButtonHover, AbsoluteButtonPosition, ButtonSize);
+    } else {
+        DrawList.AddImage(ButtonNormal, AbsoluteButtonPosition, ButtonSize);
     }
 }
 
 void Update(float dt) {
-    auto app = cast<CTrackMania>(GetApp());
-    if(app is null) return;
-
     ScreenHeight = Draw::GetHeight();
     ScreenWidth = Draw::GetWidth();
 
+    // Overwrite position and size if AutoPlaceButton is enabled
     if(AutoPlaceButton) {
         ButtonSizeX = ScreenHeight / 22.5;
         ButtonSizeY = ScreenHeight / 22.5;
@@ -69,19 +57,26 @@ void Update(float dt) {
         ButtonPosY = 0.333;
     }
 
-    if(ButtonSizeX < 0 || ButtonSizeY < 0) {
+    // Revert size if they are invalid (Size of 0 or lower would hide the button)
+    if(ButtonSizeX <= 0 || ButtonSizeY <= 0) {
         ButtonSizeX = ScreenHeight / 22.5;
         ButtonSizeY = ScreenHeight / 22.5;
     };
 
     ButtonSize = vec2(ButtonSizeX, ButtonSizeY);
     ButtonPosition = vec2(ButtonPosX, ButtonPosY);
+
     AbsoluteButtonPosition = ButtonPosition * vec2(ScreenWidth, ScreenHeight);
 
-	if (app.CurrentPlayground !is null && app.RootMap !is null) CurrentlyInMap = true;
-	else CurrentlyInMap = false;
-
+    // Declare PermissionViewRecords variable, for reuse in the logic, without the cost of calling Permissions::ViewRecords()
     PermissionViewRecords = Permissions::ViewRecords();
+    
+    // Declare CurrentlyInMap variable
+    CTrackMania@ app = cast<CTrackMania>(GetApp());
+
+    if(app is null) CurrentlyInMap = false;
+	else if (app.CurrentPlayground !is null && app.RootMap !is null) CurrentlyInMap = true;
+	else CurrentlyInMap = false;
 }
 
 void OnMouseMove(int x, int y) {
