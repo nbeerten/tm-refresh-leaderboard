@@ -43,8 +43,11 @@ void Render() {
 }
 
 void Update(float dt) {
-    ScreenHeight = Draw::GetHeight();
-    ScreenWidth = Draw::GetWidth();
+    // Check if GetHeight or GetWidth is zero to prevent an error as mentioned in #4: "divide by zero exception (zero height?)"
+    if(Draw::GetHeight() != 0 || Draw::GetWidth() != 0) {
+        ScreenHeight = Draw::GetHeight();
+        ScreenWidth = Draw::GetWidth();
+    }
 
     // Overwrite position and size if AutoPlaceButton is enabled
     if(AutoPlaceButton) {
