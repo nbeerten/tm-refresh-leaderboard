@@ -24,7 +24,7 @@ namespace Leaderboard {
         string CurGameMode = ServerInfo.CurGameModeStr;
         CurGameMode = CurGameMode.Trim();
 
-        const array<string> Gamemodes = {
+        const string[] Gamemodes = {
             "TM_TimeAttack_Online", 
             "TM_Campaign_Local", 
             "TM_PlayMap_Local"

@@ -26,7 +26,7 @@ void Main() {
 
 void Render() {
     if(!PermissionViewRecords || !UI::IsGameUIVisible()) return;
-	auto app = cast<CTrackMania>(GetApp());
+	CTrackMania@ app = cast<CTrackMania>(GetApp());
     if(app is null) return;
     if(app.RootMap is null) return;
     if(app.CurrentPlayground is null) return;

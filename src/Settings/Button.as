@@ -16,15 +16,8 @@ bool ShowButtonWithCollapsedLeaderboard = false;
 [SettingsTab name="Button" icon="Square" order="0"]
 void RenderSettingsButton()
 {
-    if(UI::Button('Reset to default')) {
-        if(!AutoPlaceButton) {
-            ButtonSizeX = 48;
-            ButtonSizeY = 48;
-            ButtonPosX = 0.028125;
-            ButtonPosY = 0.333;
-        }
-        ShowButtonWithCollapsedLeaderboard = false;
-    }
+    SettingsTabs::UI::ResetButton('Button');
+
 	UI::TextWrapped("Disable Automatic placement of button to customize button size and position.");
 
 	AutoPlaceButton = UI::Checkbox("Automatic placement of button", AutoPlaceButton);

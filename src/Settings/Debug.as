@@ -4,6 +4,8 @@ bool MoreLogging = false;
 [SettingsTab name="Debug" icon="Bug" order="1"]
 void RenderSettingsDebug()
 {
+    SettingsTabs::UI::ResetButton('Debug');
+
     UI::Markdown("## Debug Settings");
     MoreLogging = UI::Checkbox("Log more information", MoreLogging);
     UI::Markdown("## Debug information");
