@@ -16,7 +16,7 @@ bool ShowButtonWithCollapsedLeaderboard = false;
 [SettingsTab name="Button" icon="Square" order="0"]
 void RenderSettingsButton()
 {
-    SettingsTabs::UI::ResetButton('Button');
+    SettingsTab::UI::ResetButton('Button');
 
 	UI::TextWrapped("Disable Automatic placement of button to customize button size and position.");
 

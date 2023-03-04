@@ -13,12 +13,10 @@ bool CurrentlyHoveringButton = false;
 bool PermissionViewRecords = false;
 
 // Textures
-UI::Texture@ ButtonNormal;
-UI::Texture@ ButtonHover;
+UI::Texture@ ButtonIcon;
 
 void Main() {
-    @ButtonNormal = UI::LoadTexture("assets/RefreshLB_normal.png");
-    @ButtonHover = UI::LoadTexture("assets/RefreshLB_hover.png");
+    @ButtonIcon = UI::LoadTexture("assets/RefreshLB_icon.png");
 
     startnew(Leaderboard::Coroutine);
     startnew(Refresh::Coroutine);
@@ -35,11 +33,14 @@ void Render() {
     if(!Leaderboard::isVisible) return;
 
     UI::DrawList@ DrawList = UI::GetBackgroundDrawList();
+
     if(CurrentlyHoveringButton) {
-        DrawList.AddImage(ButtonHover, AbsoluteButtonPosition, ButtonSize);
+        DrawList.AddRectFilled(vec4(AbsoluteButtonPosition, ButtonSize), vec4(0.15, 0.15, 0.15, 0.8));
     } else {
-        DrawList.AddImage(ButtonNormal, AbsoluteButtonPosition, ButtonSize);
+        DrawList.AddRectFilled(vec4(AbsoluteButtonPosition, ButtonSize), vec4(0, 0, 0, 0.85));
     }
+    DrawList.AddImage(ButtonIcon, AbsoluteButtonPosition, ButtonSize, 0xebebeb40);
+
 }
 
 void Update(float dt) {
