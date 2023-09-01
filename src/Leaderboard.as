@@ -24,12 +24,14 @@ namespace Leaderboard {
         CurGameMode = CurGameMode.Trim();
 
         const string[] Gamemodes = {
-            "TM_TimeAttack_Online", 
-            "TM_Campaign_Local", 
+            "TM_TimeAttack_Online",
+            "TM_Campaign_Local",
             "TM_PlayMap_Local"
         };
+        // The Archivist script name changes regularly to avoid caching, but this will reliably detect it.
+        bool isArchivist = CurGameMode.StartsWith("TM_Archivist_");
         
-        if(Gamemodes.Find(CurGameMode) >= 0) {
+        if(isArchivist || Gamemodes.Find(CurGameMode) >= 0) {
             return true;
         } else {
             return false;
