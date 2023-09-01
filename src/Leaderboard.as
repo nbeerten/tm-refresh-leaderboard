@@ -5,10 +5,9 @@ namespace Leaderboard {
     {
         while (true) {
             yield();
-
             if(!byGamemode()) isVisible = false;
             else if(!byPersonalBest()) isVisible = false;
-            else if(byManialink()) isVisible = true;
+            else if(byManialink() && byUISequence()) isVisible = true;
             else isVisible = false;
         }
     }
@@ -35,6 +34,19 @@ namespace Leaderboard {
         } else {
             return false;
         }
+    }
+
+    bool byUISequence() {
+        CTrackMania@ app = cast<CTrackMania>(GetApp());
+        if(app is null) return false;
+        CGameCtnNetwork@ Network = app.Network;
+        if(Network is null) return false;
+
+        CGamePlaygroundUIConfig::EUISequence uiSeq = Network.ClientManiaAppPlayground.UI.UISequence;
+
+        return uiSeq == CGamePlaygroundUIConfig::EUISequence::Playing
+            || uiSeq == CGamePlaygroundUIConfig::EUISequence::Finish
+            || uiSeq == CGamePlaygroundUIConfig::EUISequence::EndRound;
     }
 
     bool byPersonalBest() {
@@ -89,6 +101,7 @@ namespace Leaderboard {
 
     bool byManialink() {
         if(ShowButtonWithCollapsedLeaderboard) return true;
+
         CTrackMania@ app = cast<CTrackMania>(GetApp());
         if(app is null) return false;
         CGameCtnNetwork@ Network = app.Network;
