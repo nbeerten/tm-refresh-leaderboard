@@ -58,6 +58,7 @@ void Update(float dt) {
 
 #if DEPENDENCY_ULTRAWIDEUIFIX
         // We have a shift value from UltrawideUIFix, convert it to a fraction of a 16/9 display width and subtract it from the default position
+        // PR by @dpeukert: https://github.com/nbeerten/tm-refresh-leaderboard/pull/6
         ButtonPosX = ((0.028125 - (UltrawideUIFix::GetUiShift() / 320)) * IdealWidth + ScreenHeight * AspectDiff) / ScreenWidth;
 #else
         ButtonPosX = (0.028125 * IdealWidth + ScreenHeight * AspectDiff) / ScreenWidth;
