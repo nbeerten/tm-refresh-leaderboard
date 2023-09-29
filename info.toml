@@ -5,3 +5,6 @@ category = "Utilities"
 version = "1.2.7"
 siteid = 229
 
+[script]
+optional_dependencies = ["UltrawideUIFix"]
+

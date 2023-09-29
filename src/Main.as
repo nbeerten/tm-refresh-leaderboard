@@ -55,7 +55,14 @@ void Update(float dt) {
     	// Calculate the equivalent position for all resolutions; X = 0.028 on 16/9 display. >16/9 -> offset, <16/9 -> squish
         float IdealWidth = Math::Min(ScreenWidth, ScreenHeight * 16.0 / 9.0);
         float AspectDiff = Math::Max(0.0, ScreenWidth / ScreenHeight - 16.0 / 9.0) / 2.0;
+
+#if DEPENDENCY_ULTRAWIDEUIFIX
+        // We have a shift value from UltrawideUIFix, convert it to a fraction of a 16/9 display width and subtract it from the default position
+        ButtonPosX = ((0.028125 - (UltrawideUIFix::GetUiShift() / 320)) * IdealWidth + ScreenHeight * AspectDiff) / ScreenWidth;
+#else
         ButtonPosX = (0.028125 * IdealWidth + ScreenHeight * AspectDiff) / ScreenWidth;
+#endif
+
         ButtonPosY = 0.333;
     }
 
