@@ -136,10 +136,10 @@ namespace Leaderboard {
                     };
                     
                     if(mButton !is null) {
-                        if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_ArrowLeft.dds") {
+                        if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMGame/Modes/Record/Icon_ArrowLeft.dds") {
                             forLoopResult = true;
                             break;
-                        } else if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMxSM/Race/Icon_WorldRecords.dds") {
+                        } else if (mButton.ImageUrl == "file://Media/Manialinks/Nadeo/TMGame/Modes/Record/Icon_WorldRecords.dds") {
                             forLoopResult = false;
                             break;
                         }
