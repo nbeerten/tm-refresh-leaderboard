@@ -23,6 +23,7 @@ void Main() {
 }
 
 void Render() {
+    if(InterfaceToggle && !UI::IsOverlayShown()) return;
     if(!PermissionViewRecords || !UI::IsGameUIVisible()) return;
 	CTrackMania@ app = cast<CTrackMania>(GetApp());
     if(app is null) return;

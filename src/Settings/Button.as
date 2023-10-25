@@ -1,6 +1,9 @@
 [Setting hidden category="Button" name="Automatic placement of button"]
 bool AutoPlaceButton = true;
 
+[Setting hidden category="Button" name="Hide when Openplanet overlay is hidden"]
+bool InterfaceToggle = false;
+
 [Setting hidden category="Button" name="Button Size X"]
 float ButtonSizeX = 48;
 [Setting hidden category="Button" name="Button Size Y"]
@@ -21,6 +24,7 @@ void RenderSettingsButton()
 	UI::TextWrapped("Disable Automatic placement of button to customize button size and position.");
 
 	AutoPlaceButton = UI::Checkbox("Automatic placement of button", AutoPlaceButton);
+	InterfaceToggle = UI::Checkbox("Hide when Openplanet overlay is hidden", InterfaceToggle);
 
     if(!AutoPlaceButton) {
         UI::Dummy(vec2(0,5));
