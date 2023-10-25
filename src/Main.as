@@ -23,6 +23,7 @@ void Main() {
 }
 
 void Render() {
+    if(InterfaceToggle && !UI::IsOverlayShown()) return;
     if(!PermissionViewRecords || !UI::IsGameUIVisible()) return;
 	CTrackMania@ app = cast<CTrackMania>(GetApp());
     if(app is null) return;
@@ -80,7 +81,7 @@ void Update(float dt) {
 
     // Declare PermissionViewRecords variable, for reuse in the logic, without the cost of calling Permissions::ViewRecords()
     PermissionViewRecords = Permissions::ViewRecords();
-    
+
     // Declare CurrentlyInMap variable
     CTrackMania@ app = cast<CTrackMania>(GetApp());
 
