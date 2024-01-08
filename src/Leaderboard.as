@@ -5,11 +5,34 @@ namespace Leaderboard {
     {
         while (true) {
             yield();
-            if(!byGamemode()) isVisible = false;
-            else if(!byPersonalBest()) isVisible = false;
+            if(!byGamemode() || !byPauseMenu() || !byStartTime() || !byPersonalBest()) isVisible = false;
             else if(byManialink() && byUISequence()) isVisible = true;
             else isVisible = false;
         }
+    }
+
+    bool byPauseMenu() {
+        CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+        CTrackManiaNetwork@ Network = cast<CTrackManiaNetwork@>(App.Network);
+        if (Network is null)
+            return false;
+
+        CGamePlaygroundClientScriptAPI@ ScriptAPI = Network.PlaygroundClientScriptAPI;
+        if (ScriptAPI is null || ScriptAPI.IsInGameMenuDisplayed)
+            return false;
+
+        return true;
+    }
+
+    bool byStartTime() {
+        CTrackMania@ App = cast<CTrackMania@>(GetApp());
+
+        CSmArenaRulesMode@ PlaygroundScript = cast<CSmArenaRulesMode@>(App.PlaygroundScript);
+        if (PlaygroundScript is null || PlaygroundScript.StartTime > 2147483000)
+            return false;
+
+        return true;
     }
 
     bool byGamemode() {
@@ -46,9 +69,11 @@ namespace Leaderboard {
 
         CGamePlaygroundUIConfig::EUISequence uiSeq = Network.ClientManiaAppPlayground.UI.UISequence;
 
+        if (uiSeq == CGamePlaygroundUIConfig::EUISequence::EndRound)
+            return false;
+
         return uiSeq == CGamePlaygroundUIConfig::EUISequence::Playing
-            || uiSeq == CGamePlaygroundUIConfig::EUISequence::Finish
-            || uiSeq == CGamePlaygroundUIConfig::EUISequence::EndRound;
+            || uiSeq == CGamePlaygroundUIConfig::EUISequence::Finish;
     }
 
     bool byPersonalBest() {
@@ -109,16 +134,12 @@ namespace Leaderboard {
         CGameCtnNetwork@ Network = app.Network;
         if(Network is null) return false;
         CGameManiaAppPlayground@ ClientManiaAppPlayground = app.Network.ClientManiaAppPlayground;
-        if(ClientManiaAppPlayground is null) return false;
+        if(ClientManiaAppPlayground is null || ClientManiaAppPlayground.Playground is null)
+            return false;
 
         MwFastBuffer<CGameUILayer@> UILayers = ClientManiaAppPlayground.UILayers;
-
-        if (Network.ClientManiaAppPlayground is null ||
-            Network.ClientManiaAppPlayground.Playground is null ||
-            !(Network.ClientManiaAppPlayground.UILayers.Length > 0)
-        ){
+        if (UILayers.Length < 2)
             return false;
-        };
 
         bool forLoopResult;
         for (uint i = 0; i < UILayers.Length; i++) {
