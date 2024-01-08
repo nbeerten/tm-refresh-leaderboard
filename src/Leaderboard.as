@@ -5,9 +5,7 @@ namespace Leaderboard {
     {
         while (true) {
             yield();
-            if(!byGamemode() || !byPauseMenu() || !byStartTime() || !byPersonalBest()) isVisible = false;
-            else if(byManialink() && byUISequence()) isVisible = true;
-            else isVisible = false;
+            isVisible = byPauseMenu() && byStartTime() && byUISequence() && byGamemode() && byPersonalBest() && byManialink();
         }
     }
 
