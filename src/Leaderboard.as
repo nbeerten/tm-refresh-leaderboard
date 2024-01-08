@@ -27,7 +27,10 @@ namespace Leaderboard {
         CTrackMania@ App = cast<CTrackMania@>(GetApp());
 
         CSmArenaRulesMode@ PlaygroundScript = cast<CSmArenaRulesMode@>(App.PlaygroundScript);
-        if (PlaygroundScript is null || PlaygroundScript.StartTime > 2147483000)
+        if (PlaygroundScript is null)  // null when on servers, can't check StartTime in this case
+            return true;
+
+        if (PlaygroundScript.StartTime > 2147483000)
             return false;
 
         return true;
@@ -63,12 +66,13 @@ namespace Leaderboard {
         CTrackMania@ app = cast<CTrackMania>(GetApp());
         if(app is null) return false;
         CGameCtnNetwork@ Network = app.Network;
-        if(Network is null) return false;
+        if(
+            Network is null
+            || Network.ClientManiaAppPlayground is null
+            || Network.ClientManiaAppPlayground.UI is null
+        ) return false;
 
         CGamePlaygroundUIConfig::EUISequence uiSeq = Network.ClientManiaAppPlayground.UI.UISequence;
-
-        if (uiSeq == CGamePlaygroundUIConfig::EUISequence::EndRound)
-            return false;
 
         return uiSeq == CGamePlaygroundUIConfig::EUISequence::Playing
             || uiSeq == CGamePlaygroundUIConfig::EUISequence::Finish;
