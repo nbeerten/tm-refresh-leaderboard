@@ -1,3 +1,6 @@
+> [!WARNING] 
+> Plugin is no longer actively maintained and this repo will be read-only moving forward
+---
 [![Number of downloads](https://img.shields.io/badge/dynamic/json?color=000000&label=&query=downloads&suffix=%20downloads&url=https%3A%2F%2Fopenplanet.dev%2Fapi%2Fplugin%2F229&style=for-the-badge)](https://openplanet.dev/plugin/229)
 ![Game: Trackmania](https://user-images.githubusercontent.com/59444993/211171290-5182dfe3-b0de-4a00-a08e-c373ee676776.jpg)
 # Refresh Leaderboard
